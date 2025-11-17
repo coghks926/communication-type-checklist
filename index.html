@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>나의 소통유형 체크리스트</title>
     <style>
         * {
@@ -512,6 +512,7 @@
             font-weight: 600;
             opacity: 0.9;
             line-height: 1.2;
+            text-align: center;
         }
 
         .progress-bar {
@@ -1215,7 +1216,7 @@
             border: none;
             border-bottom: 2px solid #e5e7eb;
             padding: 0.5rem 0;
-            font-size: clamp(14px, 2.5vw, 16px);
+            font-size: 16px;
             color: #1f2937;
             font-family: inherit;
             transition: border-color 0.3s ease;
@@ -1327,7 +1328,10 @@
             }
 
             .answer-option .option-label {
-                font-size: clamp(9px, 2vw, 12px);
+                font-size: clamp(11px, 2.5vw, 14px);
+                text-align: center;
+                white-space: pre-line;
+                line-height: 1.4;
             }
 
             .progress-bar {
@@ -1769,7 +1773,10 @@
             }
 
             .answer-option .option-label {
-                font-size: clamp(8px, 1.8vw, 11px);
+                font-size: clamp(10px, 2.2vw, 13px);
+                text-align: center;
+                white-space: pre-line;
+                line-height: 1.4;
             }
 
             .question-card {
@@ -1947,19 +1954,19 @@
                 <div class="scoring-guide">
                     <div class="score-item">
                         <div class="score-value">3점</div>
-                        <div class="score-label">항상 그렇다</div>
+                        <div class="score-label"></div>
                     </div>
                     <div class="score-item">
                         <div class="score-value">2점</div>
-                        <div class="score-label">비교적 그렇다</div>
+                        <div class="score-label"></div>
                     </div>
                     <div class="score-item">
                         <div class="score-value">1점</div>
-                        <div class="score-label">어쩌다 간혹 그렇다</div>
+                        <div class="score-label"></div>
                     </div>
                     <div class="score-item">
                         <div class="score-value">0점</div>
-                        <div class="score-label">전혀 그렇지 않다</div>
+                        <div class="score-label"></div>
                     </div>
                 </div>
             </div>
@@ -2330,10 +2337,10 @@
             consent: false
         };
         const answerOptions = [
-            { score: 3, label: "항상 그렇다" },
-            { score: 2, label: "비교적 그렇다" },
-            { score: 1, label: "어쩌다 간혹 그렇다" },
-            { score: 0, label: "전혀 그렇지 않다" }
+            { score: 3, label: "항상 그렇다", labelMobile: "항상\n그렇다" },
+            { score: 2, label: "비교적 그렇다", labelMobile: "비교적\n그렇다" },
+            { score: 1, label: "어쩌다 간혹 그렇다", labelMobile: "어쩌다\n간혹 그렇다" },
+            { score: 0, label: "전혀 그렇지 않다", labelMobile: "전혀\n그렇지 않다" }
         ];
 
         // 사용자 정보 입력 페이지로 이동
@@ -2416,13 +2423,17 @@
                             <div class="question-text">${q.text}</div>
                         </div>
                         <div class="answer-options">
-                            ${answerOptions.map(option => `
+                            ${answerOptions.map(option => {
+                                const isMobile = window.innerWidth <= 768;
+                                const displayLabel = isMobile ? option.labelMobile : option.label;
+                                return `
                                 <div class="answer-option ${selected === option.score ? 'selected' : ''}" 
                                      onclick="selectAnswer(${index}, ${option.score})">
                                     <div class="option-score">${option.score}점</div>
-                                    <div class="option-label">${option.label}</div>
+                                    <div class="option-label">${displayLabel}</div>
                                 </div>
-                            `).join('')}
+                            `;
+                            }).join('')}
                         </div>
                     </div>
                 `;
