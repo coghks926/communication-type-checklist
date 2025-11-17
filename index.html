@@ -154,6 +154,15 @@
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(52, 211, 153, 0.4));
         }
 
+        /* 사용자 정보 입력 페이지 간격 조정 */
+        #userInfoSection .header {
+            margin-bottom: 1.5rem;
+        }
+
+        #userInfoSection .section-header {
+            margin-bottom: 1rem;
+        }
+
         .user-form-grid {
             display: flex;
             flex-direction: column;
@@ -2023,17 +2032,13 @@
                     <div class="title-main">사용자 정보 입력</div>
                     <div class="subtitle-text">
                         <span class="subtitle-line">검사를 시작하기 전에</span>
-                        <span class="subtitle-line secondary">이름, 성별, 나이를 입력해주세요.</span>
+                        <span class="subtitle-line secondary">성별, 나이를 입력해주세요.</span>
                     </div>
                     <div class="divider"></div>
                 </div>
             </div>
 
             <div class="user-form-grid">
-                <div class="user-field">
-                    <label style="font-weight:700; color:#334155; font-size: clamp(14px,2vw,16px); margin-bottom: 0.5rem; display: block;">이름</label>
-                    <input id="u-name" type="text" placeholder="이름을 입력하세요" class="user-input" />
-                </div>
                 <div class="user-field">
                     <label style="font-weight:700; color:#334155; font-size: clamp(14px,2vw,16px); margin-bottom: 0.5rem; display: block;">성별</label>
                     <div class="user-radio-group">
@@ -2370,7 +2375,6 @@
         // 상태 관리
         let answers = {};
         let userInfo = {
-            name: '',
             gender: '',
             age: '',
             consent: false
@@ -2413,20 +2417,14 @@
 
         // 사용자 정보 확인 후 검사 시작
         function startTestFromInfo() {
-            const nameEl = document.getElementById('u-name');
             const ageEl = document.getElementById('u-age');
             const consentEl = document.getElementById('u-consent');
             const genderEl = document.querySelector('input[name="u-gender"]:checked');
 
-            userInfo.name = nameEl ? nameEl.value.trim() : '';
             userInfo.age = ageEl ? ageEl.value : '';
             userInfo.consent = consentEl ? consentEl.checked : false;
             userInfo.gender = genderEl ? genderEl.value : '';
 
-            if (!userInfo.name) {
-                alert('이름을 입력해주세요.');
-                return;
-            }
             if (!userInfo.gender) {
                 alert('성별을 선택해주세요.');
                 return;
@@ -2836,15 +2834,13 @@
             strategyCount = 3;
             currentHighestTypes = [];
             currentScores = {};
-            userInfo = { name: '', gender: '', age: '', consent: false };
+            userInfo = { gender: '', age: '', consent: false };
             
             // 폼 초기화
-            const nameEl = document.getElementById('u-name');
             const ageEl = document.getElementById('u-age');
             const consentEl = document.getElementById('u-consent');
             const genderEls = document.querySelectorAll('input[name="u-gender"]');
             
-            if (nameEl) nameEl.value = '';
             if (ageEl) ageEl.value = '';
             if (consentEl) consentEl.checked = false;
             genderEls.forEach(el => el.checked = false);
