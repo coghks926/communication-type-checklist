@@ -1,0 +1,2814 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 소통유형 체크리스트</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --secondary-gradient: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+            --success-gradient: linear-gradient(135deg, #6ee7b7 0%, #10b981 100%);
+            --warning-gradient: linear-gradient(135deg, #84cc16 0%, #65a30d 100%);
+            --info-gradient: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+            --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Pretendard', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 50%, #6ee7b7 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #1f2937;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+            overflow-x: hidden;
+            word-wrap: break-word;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .container:has(#introSection) {
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: calc(100vh - 4rem);
+        }
+
+        .container:has(.result-section.active) {
+            max-width: 1200px;
+            display: block;
+            min-height: auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: clamp(2rem, 5vw, 3.5rem);
+            box-shadow: var(--shadow-xl);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: clamp(32px, 6vw, 48px);
+            font-weight: 900;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: clamp(16px, 3vw, 20px);
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header .tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: .4rem 1rem;
+            border-radius: 999px;
+            font-size: clamp(11px, 1.8vw, 13px);
+            font-weight: 700;
+            color: #059669;
+            background: rgba(16, 185, 129, 0.12);
+            margin-bottom: .75rem;
+        }
+
+        .section-header .title-main {
+            font-size: clamp(24px, 5vw, 34px);
+            font-weight: 900;
+            color: #059669;
+            margin-bottom: .5rem;
+        }
+
+        .section-header .subtitle-text {
+            font-size: clamp(13px, 2.6vw, 17px);
+            color: #475569;
+            line-height: 1.6;
+            word-break: keep-all;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .35rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .section-header .subtitle-text .subtitle-line {
+            display: inline;
+        }
+
+        .section-header .subtitle-text .subtitle-line.secondary {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .section-header .divider {
+            width: clamp(80px, 15vw, 140px);
+            height: 3px;
+            margin: 1.25rem auto 0;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(52, 211, 153, 0.4));
+        }
+
+        .user-form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .user-field {
+            width: 100%;
+        }
+
+        .user-input, .user-select {
+            width: 100%;
+            height: 48px;
+            border: 2px solid #e5e7eb;
+            border-radius: .75rem;
+            padding: 0 1rem;
+            font-size: 16px;
+            background: #fff;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .user-input:focus, .user-select:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .user-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 20 20%22%3E%3Cpath stroke=%22%236b7280%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%221.5%22 d=%22M6 8l4 4 4-4%22/%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.25em;
+        }
+
+        .user-radio-group {
+            width: 100%;
+            height: 48px;
+            border: 2px solid #e5e7eb;
+            border-radius: .75rem;
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 1.5rem;
+            background: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .user-radio-group:focus-within {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            cursor: pointer;
+        }
+
+        .radio-input {
+            width: 18px;
+            height: 18px;
+            accent-color: #10b981;
+            cursor: pointer;
+        }
+
+        .radio-label span {
+            font-size: clamp(14px, 2.2vw, 16px);
+            color: #334155;
+        }
+
+        .consent-box {
+            border: 2px solid #e5e7eb;
+            border-radius: .75rem;
+            padding: 1.5rem;
+            background: #fff;
+        }
+
+        .consent-label {
+            display: flex;
+            gap: .6rem;
+            align-items: center;
+            cursor: pointer;
+            font-size: clamp(13px, 2.1vw, 15px);
+            color: #475569;
+        }
+
+        .consent-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: #10b981;
+            cursor: pointer;
+            position: relative;
+            top: 2px;
+        }
+
+        .info-block {
+            margin-top: clamp(1.5rem, 4vw, 2.5rem);
+            padding: clamp(1.2rem, 3.5vw, 2rem);
+            border-radius: 1.25rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(5, 150, 105, 0.12));
+            border: 1px solid rgba(16, 185, 129, 0.18);
+            display: grid;
+            gap: clamp(.85rem, 2.2vw, 1.4rem);
+            word-break: keep-all;
+        }
+
+        .info-title {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            font-size: clamp(15px, 2.8vw, 19px);
+            font-weight: 800;
+            color: #059669;
+            letter-spacing: .02em;
+        }
+
+        .info-title::before {
+            content: "ℹ️";
+            font-size: 1.2em;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: .75rem;
+            font-size: clamp(14px, 2.5vw, 17px);
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        .info-item strong {
+            font-weight: 700;
+            color: #059669;
+            min-width: 1.5em;
+        }
+
+        .info-email {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .35rem .75rem;
+            border-radius: 999px;
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+            font-weight: 600;
+            font-size: clamp(13px, 2.3vw, 15px);
+        }
+
+        .info-email::before {
+            content: "✉️";
+            font-size: 1.05em;
+        }
+
+        .intro-section {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 2px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .intro-section h2 {
+            font-size: clamp(20px, 4vw, 24px);
+            font-weight: 700;
+            color: #059669;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .intro-section h2::before {
+            content: "📋";
+            font-size: 1.2em;
+        }
+
+        .intro-section p {
+            font-size: clamp(14px, 2.5vw, 16px);
+            color: #475569;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .scoring-guide {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .score-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: #10b981;
+        }
+
+        .score-item .score-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #10b981;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .score-item .score-label {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .question-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .question-item {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .question-item:hover {
+            border-color: #10b981;
+            box-shadow: var(--shadow-md);
+        }
+
+        .question-item.answered {
+            border-color: #10b981;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(16, 185, 129, 0.02));
+        }
+
+        .question-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .question-number {
+            background: var(--primary-gradient);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .question-text {
+            font-size: clamp(16px, 3vw, 18px);
+            font-weight: 600;
+            color: #1f2937;
+            line-height: 1.7;
+            flex: 1;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .axis-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .axis-badge {
+            display: none;
+        }
+
+        .answer-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .answer-option {
+            padding: 0.875rem 0.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.875rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        .answer-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .answer-option:hover::before {
+            left: 100%;
+        }
+
+        .answer-option:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+            border-color: #10b981;
+        }
+
+        .answer-option.selected {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: #10b981;
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        .answer-option .option-score {
+            font-size: clamp(16px, 4vw, 20px);
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+
+        .answer-option .option-label {
+            font-size: clamp(10px, 2.5vw, 13px);
+            font-weight: 600;
+            opacity: 0.9;
+            line-height: 1.2;
+        }
+
+        .progress-bar {
+            position: sticky;
+            top: 1rem;
+            z-index: 100;
+            background: white;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .progress-text {
+            font-weight: 700;
+            color: #1f2937;
+            font-size: clamp(14px, 2.5vw, 16px);
+        }
+
+        .progress-percentage {
+            font-weight: 800;
+            color: #10b981;
+            font-size: clamp(16px, 3vw, 20px);
+        }
+
+        .progress-bar-fill {
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 999px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: var(--progress, 0%);
+            background: var(--primary-gradient);
+            border-radius: 999px;
+            transition: width 0.5s ease;
+        }
+
+        .btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 1rem;
+            padding: 1rem 2rem;
+            font-size: clamp(16px, 3vw, 18px);
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #374151;
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+            position: sticky;
+            bottom: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        #introSection {
+            max-width: 900px !important;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #introSection .scoring-guide {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+        }
+
+        #introSection .score-item {
+            min-width: 0;
+            padding: 1rem 0.5rem;
+        }
+
+        #introSection .score-item .score-label {
+            white-space: nowrap;
+            font-size: clamp(12px, 1.5vw, 14px);
+        }
+
+        #introSection .intro-section {
+            text-align: center;
+        }
+
+        #introSection .intro-section h2 {
+            text-align: center;
+            justify-content: center;
+        }
+
+        #introSection .intro-section p {
+            text-align: center;
+        }
+
+        #introSection .actions {
+            position: static;
+            background: transparent;
+            backdrop-filter: none;
+            padding: 0;
+            box-shadow: none;
+            border-radius: 0;
+        }
+
+        .result-section {
+            display: none;
+        }
+
+        .result-section.active {
+            display: block;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .result-title {
+            font-size: clamp(30px, 5.2vw, 38px);
+            font-weight: 900;
+            color: #059669;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.03em;
+        }
+
+        .result-title::after {
+            content: "";
+            display: block;
+            width: 72px;
+            height: 4px;
+            border-radius: 999px;
+            margin: 0.5rem auto 0;
+            background: linear-gradient(90deg, #34d399, #10b981);
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            border-radius: 999px;
+            font-size: clamp(18px, 3.5vw, 24px);
+            font-weight: 800;
+            margin: 0.5rem;
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .type-badge.type-1 {
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        .type-badge.type-2 {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .type-badge.type-3 {
+            background: linear-gradient(135deg, #34d399, #10b981);
+        }
+
+        .type-badge.type-4 {
+            background: linear-gradient(135deg, #6ee7b7, #34d399);
+        }
+
+        .type-badge.type-5 {
+            background: linear-gradient(135deg, #a7f3d0, #6ee7b7);
+        }
+
+        .type-badge.equal-score {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+
+        .type-button {
+            display: inline-block;
+            padding: 0.875rem 1.75rem;
+            border: 2px solid #10b981;
+            border-radius: 0.875rem;
+            font-size: clamp(16px, 2.8vw, 20px);
+            font-weight: 700;
+            margin: 0.4rem;
+            color: #10b981;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);
+            min-width: 100px;
+        }
+
+        .type-button:hover {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: #059669;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .type-button.active {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border-color: #16a34a;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .type-selector-container {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.06), rgba(5, 150, 105, 0.04));
+            border-radius: 1.25rem;
+            padding: 1.15rem 1.5rem;
+            margin-bottom: 0.6rem;
+            margin-top: 0;
+            border: 1px solid rgba(16, 185, 129, 0.15);
+        }
+
+        .type-selector-label {
+            color: #64748b;
+            font-size: clamp(14px, 2.2vw, 16px);
+            /* 기본 p 태그의 위쪽 마진 제거해서 위 여백 축소 */
+            margin: 0 0 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .graph-container {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .graph-title {
+            font-size: clamp(20px, 4vw, 24px);
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .graph {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            gap: 1rem;
+            height: 300px;
+            padding: 1rem 0;
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: visible;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Desktop 전용: 유형 상세 영역 세로 간격 축소 */
+        @media (min-width: 1024px) {
+            .type-detail-section {
+                padding: 1.4rem 2rem 2rem 2rem;
+            }
+
+            .type-detail-title {
+                margin-bottom: 0.25rem;
+            }
+
+            .type-selector-container {
+                padding: 1.05rem 1.8rem; /* 데스크탑에서 세로 길이 다시 살리기 */
+                margin-bottom: 0.6rem;   /* 카드 위치는 원래대로 유지 */
+            }
+
+            /* 카드 박스 위치는 그대로 두고, 안쪽 상단 여백만 줄이기 */
+            .type-detail-card {
+                padding-top: 1rem;
+            }
+
+            .type-selector-label {
+                margin: 0 0 0.55rem;
+            }
+
+            .type-button {
+                padding: 0.55rem 1.5rem;
+                margin: 0.2rem;
+            }
+        }
+
+        .graph-bar-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .graph-bar-wrapper {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            min-height: 0;
+        }
+
+        .graph-bar {
+            width: 100%;
+            max-width: 80px;
+            border-radius: 0.5rem 0.5rem 0 0;
+            position: relative;
+            transition: height 1s ease-out;
+            box-shadow: var(--shadow-sm);
+            min-height: 20px;
+            box-sizing: border-box;
+        }
+
+        .graph-bar {
+            background: linear-gradient(180deg, #6ee7b7, #34d399);
+        }
+
+        .graph-bar.type-1 {
+            background: linear-gradient(180deg, #6ee7b7, #34d399);
+        }
+
+        .graph-bar.type-2 {
+            background: linear-gradient(180deg, #6ee7b7, #34d399);
+        }
+
+        .graph-bar.type-3 {
+            background: linear-gradient(180deg, #6ee7b7, #34d399);
+        }
+
+        .graph-bar.type-4 {
+            background: linear-gradient(180deg, #6ee7b7, #34d399);
+        }
+
+        .graph-bar.type-5 {
+            background: linear-gradient(180deg, #6ee7b7, #34d399);
+        }
+
+        .graph-bar.highest {
+            background: linear-gradient(180deg, #047857, #065f46) !important;
+            box-shadow: 0 4px 16px rgba(4, 120, 87, 0.5);
+            border: 2px solid #065f46;
+        }
+
+        .graph-bar.highest.type-1 {
+            background: linear-gradient(180deg, #047857, #065f46) !important;
+            box-shadow: 0 4px 16px rgba(4, 120, 87, 0.5);
+            border: 2px solid #065f46;
+        }
+
+        .graph-bar.highest.type-2 {
+            background: linear-gradient(180deg, #047857, #065f46) !important;
+            box-shadow: 0 4px 16px rgba(4, 120, 87, 0.5);
+            border: 2px solid #065f46;
+        }
+
+        .graph-bar.highest.type-3 {
+            background: linear-gradient(180deg, #047857, #065f46) !important;
+            box-shadow: 0 4px 16px rgba(4, 120, 87, 0.5);
+            border: 2px solid #065f46;
+        }
+
+        .graph-bar.highest.type-4 {
+            background: linear-gradient(180deg, #047857, #065f46) !important;
+            box-shadow: 0 4px 16px rgba(4, 120, 87, 0.5);
+            border: 2px solid #065f46;
+        }
+
+        .graph-bar.highest.type-5 {
+            background: linear-gradient(180deg, #047857, #065f46) !important;
+            box-shadow: 0 4px 16px rgba(4, 120, 87, 0.5);
+            border: 2px solid #065f46;
+        }
+
+        .graph-bar-label {
+            font-weight: 700;
+            font-size: clamp(14px, 2.5vw, 16px);
+            color: #1f2937;
+        }
+
+        .graph-bar-value {
+            font-weight: 800;
+            font-size: clamp(16px, 3vw, 20px);
+            color: #10b981;
+            margin-top: 0.5rem;
+        }
+
+        .type-description {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .type-description h3 {
+            font-size: clamp(22px, 4vw, 28px);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #e5e7eb;
+        }
+
+        .type-description h3.type-1 {
+            color: #047857;
+            border-bottom-color: #047857;
+        }
+
+        .type-description h3.type-2 {
+            color: #059669;
+            border-bottom-color: #059669;
+        }
+
+        .type-description h3.type-3 {
+            color: #10b981;
+            border-bottom-color: #10b981;
+        }
+
+        .type-description h3.type-4 {
+            color: #34d399;
+            border-bottom-color: #34d399;
+        }
+
+        .type-description h3.type-5 {
+            color: #6ee7b7;
+            border-bottom-color: #6ee7b7;
+        }
+
+        .type-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(5, 150, 105, 0.05));
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 2px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .feature-card h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-card li {
+            padding: 0.5rem 0;
+            color: #475569;
+            font-size: 15px;
+            line-height: 1.6;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .feature-card li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: 800;
+        }
+
+        .communication-methods {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .communication-methods h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .communication-methods p {
+            color: #475569;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .score-summary {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .score-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .score-card.highest {
+            border-color: #10b981;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        .score-card .axis-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-card .axis-score {
+            font-size: 32px;
+            font-weight: 800;
+            color: #10b981;
+        }
+
+        .type-detail-section {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .type-detail-title {
+            font-size: clamp(28px, 5.5vw, 36px);
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            color: #059669;
+            text-align: center;
+        }
+
+        .type-detail-subtitle {
+            font-size: clamp(16px, 2.8vw, 19px);
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 0;
+            text-align: center;
+            display: block;
+        }
+
+        .type-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: stretch;
+        }
+
+        .type-detail-card {
+            background: white;
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            border: 2px solid rgba(16, 185, 129, 0.12);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .type-detail-card:hover {
+            border-color: rgba(16, 185, 129, 0.25);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .type-detail-card h3 {
+            font-size: clamp(19px, 3.8vw, 23px);
+            font-weight: 800;
+            color: #059669;
+            margin: 0;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid rgba(16, 185, 129, 0.2);
+            height: 70px;
+            min-height: 70px;
+            display: flex;
+            align-items: flex-end;
+            box-sizing: border-box;
+            flex-shrink: 0;
+            line-height: 1.4;
+        }
+
+        .type-detail-card ul {
+            list-style: none;
+            padding: 0;
+            flex-grow: 1;
+        }
+
+        .type-detail-card li {
+            padding: 0.5rem 0;
+            color: #475569;
+            font-size: clamp(14px, 2.5vw, 16px);
+            line-height: 1.6;
+            padding-left: 2rem;
+            position: relative;
+            min-height: 2em;
+        }
+
+        .type-detail-card li::before {
+            content: "•";
+            position: absolute;
+            left: 0.5rem;
+            top: 0.75rem;
+            color: #10b981;
+            font-weight: 800;
+            font-size: 1em;
+            line-height: 1.8;
+        }
+
+        .strategy-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .strategy-item {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .strategy-item:hover {
+            border-color: #10b981;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .strategy-number {
+            font-weight: 800;
+            color: #10b981;
+            margin-bottom: 0.5rem;
+            font-size: clamp(16px, 3vw, 18px);
+        }
+
+        .strategy-input {
+            width: 100%;
+            border: none;
+            border-bottom: 2px solid #e5e7eb;
+            padding: 0.5rem 0;
+            font-size: clamp(14px, 2.5vw, 16px);
+            color: #1f2937;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+            background: transparent;
+        }
+
+        .strategy-input:focus {
+            outline: none;
+            border-bottom-color: #10b981;
+        }
+
+        .strategy-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .strategy-remove {
+            margin-top: 0.5rem;
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            transition: background 0.3s ease;
+        }
+
+        .strategy-remove:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* 태블릿 (768px - 1024px) */
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .container {
+                max-width: 90%;
+            }
+
+            .graph-container {
+                padding: 1.5rem;
+            }
+
+            .graph {
+                height: 280px;
+                gap: 0.75rem;
+            }
+
+            .graph-bar {
+                max-width: 70px;
+            }
+
+            .score-summary {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: 0.75rem;
+            }
+
+            .type-detail-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        /* 태블릿 및 작은 화면 (768px 이하) */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.5rem;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .container:has(#introSection) {
+                max-width: 100%;
+                display: block;
+                min-height: auto;
+            }
+
+            #introSection {
+                max-width: 100% !important;
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .card {
+                padding: 1.5rem;
+                border-radius: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .header {
+                margin-bottom: 2rem;
+            }
+
+            .section-header {
+                margin-bottom: 1.5rem;
+            }
+
+            .answer-options {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.375rem;
+            }
+
+            .answer-option {
+                padding: 0.75rem 0.375rem;
+            }
+
+            .answer-option .option-score {
+                font-size: clamp(14px, 3.5vw, 18px);
+            }
+
+            .answer-option .option-label {
+                font-size: clamp(9px, 2vw, 12px);
+            }
+
+            .progress-bar {
+                padding: 0.75rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .question-card {
+                padding: 1.25rem;
+                margin-bottom: 1.25rem;
+            }
+
+            .question-number {
+                width: 2rem;
+                height: 2rem;
+                font-size: 14px;
+            }
+
+            .question-text {
+                font-size: clamp(15px, 3.5vw, 17px);
+            }
+
+            .btn {
+                padding: 0.875rem 1.5rem;
+                font-size: clamp(15px, 3.5vw, 17px);
+            }
+
+            .actions {
+                margin-top: 2rem;
+                gap: 0.75rem;
+                flex-direction: row;
+                justify-content: space-between;
+                position: sticky;
+                bottom: 1rem;
+                background: rgba(255, 255, 255, 0.95);
+                padding: 1rem;
+                margin-left: -1.5rem;
+                margin-right: -1.5rem;
+                margin-bottom: -1.5rem;
+                border-radius: 0 0 1.5rem 1.5rem;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            #introSection .actions {
+                justify-content: center !important;
+                position: static;
+                background: transparent;
+                padding: 0;
+                margin-left: 0;
+                margin-right: 0;
+                margin-bottom: 0;
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            #introSection .actions .btn {
+                flex: 0 1 auto;
+                width: auto;
+                min-width: 120px;
+                justify-content: center;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+
+            .actions .btn {
+                flex: 0 1 auto;
+                width: auto;
+                min-width: 120px;
+                justify-content: center;
+            }
+
+            .actions .btn-secondary {
+                margin-right: auto;
+            }
+
+            .actions .btn:not(.btn-secondary) {
+                margin-left: auto;
+            }
+
+            .result-header {
+                margin-bottom: 2rem;
+            }
+
+            .result-title {
+                font-size: clamp(24px, 5vw, 34px);
+            }
+
+            .type-badge {
+                padding: 0.625rem 1.5rem;
+                font-size: clamp(16px, 3.5vw, 20px);
+                margin: 0.375rem;
+            }
+
+            .score-summary {
+                display: flex;
+                gap: 0.375rem;
+                margin-bottom: 1.5rem;
+                overflow-x: visible;
+                overflow-y: visible;
+            }
+
+            .score-card {
+                flex: 1 1 0;
+                min-width: 0;
+                padding: 0.75rem 0.5rem;
+            }
+
+            .score-card .axis-name {
+                font-size: clamp(10px, 2.2vw, 13px);
+                margin-bottom: 0.25rem;
+                line-height: 1.3;
+            }
+
+            .score-card .axis-score {
+                font-size: clamp(16px, 3.5vw, 22px);
+            }
+
+            .graph-container {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .graph-title {
+                font-size: clamp(18px, 4vw, 22px);
+                margin-bottom: 1.5rem;
+            }
+
+            .graph {
+                height: 250px;
+                gap: 0.5rem;
+                padding: 0.75rem 0;
+            }
+
+            .graph-bar {
+                max-width: 50px;
+                border-radius: 0.375rem 0.375rem 0 0;
+            }
+
+            .graph-bar-label {
+                font-size: clamp(12px, 2.5vw, 14px);
+            }
+
+            .graph-bar-value {
+                font-size: clamp(12px, 2.5vw, 14px);
+            }
+
+            .graph-bar-container {
+                gap: 0.375rem;
+            }
+
+            .type-detail-title {
+                font-size: clamp(24px, 5vw, 32px);
+                margin-bottom: 0.375rem;
+            }
+
+            .type-detail-subtitle {
+                font-size: clamp(14px, 2.8vw, 17px);
+                margin-bottom: 0;
+            }
+
+            .type-detail-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+                margin-bottom: 1rem;
+            }
+
+            .type-detail-card {
+                padding: 1rem;
+            }
+
+            .type-detail-card h3 {
+                font-size: clamp(18px, 3.5vw, 20px);
+                margin: 0;
+                margin-bottom: 0.75rem;
+                padding-bottom: 0.75rem;
+                height: 60px;
+                min-height: 60px;
+                display: flex;
+                align-items: flex-end;
+                box-sizing: border-box;
+                flex-shrink: 0;
+                line-height: 1.4;
+            }
+
+            .type-detail-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                align-items: stretch;
+            }
+
+            .type-detail-card:nth-child(2) h3 {
+                font-size: clamp(18px, 3.5vw, 20px);
+                margin: 0;
+                margin-bottom: 1rem;
+                padding-bottom: 1rem;
+                height: 70px;
+                min-height: 70px;
+                display: flex;
+                align-items: flex-end;
+                box-sizing: border-box;
+                flex-shrink: 0;
+                line-height: 1.4;
+            }
+
+
+            .type-detail-card ul {
+                margin-top: 0.75rem;
+            }
+
+            .type-detail-card li {
+                font-size: clamp(13px, 2.5vw, 15px);
+                padding: 0.4rem 0;
+                padding-left: 1.75rem;
+            }
+
+            .type-selector-container {
+                padding: 1.05rem;
+                margin-bottom: 0.6rem;
+                margin-top: 0;
+            }
+
+            .type-selector-label {
+                font-size: clamp(13px, 2.2vw, 15px);
+                margin-bottom: 0.75rem;
+            }
+
+            .type-button {
+                padding: 0.75rem 1.5rem;
+                font-size: clamp(14px, 2.8vw, 18px);
+                margin: 0.3rem;
+                min-width: 90px;
+            }
+
+            .intro-section p {
+                font-size: 0;
+                position: relative;
+            }
+
+            .intro-section p::before {
+                content: "아래 25개의 문항을 읽고,\A자신에게 해당하는 정도를 선택해주세요.\A각 문항은 0점부터 3점까지 점수가 부여되며,\A솔직하고 정확하게 답변하시면\A더 정확한 결과를 확인하실 수 있습니다.\A검사 완료 후 가장 높은 점수를 받은 유형이\A당신의 소통유형으로 나타납니다.";
+                white-space: pre-line;
+                display: block;
+                font-size: clamp(14px, 2.5vw, 16px);
+                color: #475569;
+                line-height: 1.8;
+            }
+
+            .scoring-guide {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.5rem;
+            }
+
+            .score-item {
+                padding: 0.875rem 0.5rem;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .score-item .score-value {
+                font-size: clamp(18px, 4vw, 24px);
+                text-align: center;
+            }
+
+            .score-item .score-label {
+                font-size: clamp(11px, 2.5vw, 14px);
+                text-align: center;
+                line-height: 1.4;
+            }
+
+            /* 작은 화면에서만 줄바꿈 적용 */
+            .score-item:nth-child(1) .score-label {
+                font-size: 0;
+            }
+
+            .score-item:nth-child(1) .score-label::before {
+                content: "항상";
+                font-size: clamp(11px, 2.5vw, 14px);
+                display: block;
+            }
+
+            .score-item:nth-child(1) .score-label::after {
+                content: "그렇다";
+                font-size: clamp(11px, 2.5vw, 14px);
+                display: block;
+            }
+
+            .score-item:nth-child(2) .score-label {
+                font-size: 0;
+            }
+
+            .score-item:nth-child(2) .score-label::before {
+                content: "비교적";
+                font-size: clamp(11px, 2.5vw, 14px);
+                display: block;
+            }
+
+            .score-item:nth-child(2) .score-label::after {
+                content: "그렇다";
+                font-size: clamp(11px, 2.5vw, 14px);
+                display: block;
+            }
+
+            .score-item:nth-child(3) .score-label {
+                font-size: 0;
+            }
+
+            .score-item:nth-child(3) .score-label::before {
+                content: "어쩌다";
+                font-size: clamp(11px, 2.5vw, 14px);
+                display: block;
+            }
+
+            .score-item:nth-child(3) .score-label::after {
+                content: "간혹 그렇다";
+                font-size: clamp(9px, 2vw, 12px);
+                display: block;
+                white-space: nowrap;
+            }
+
+            .score-item:nth-child(4) .score-label {
+                font-size: 0;
+            }
+
+            .score-item:nth-child(4) .score-label::before {
+                content: "전혀";
+                font-size: clamp(11px, 2.5vw, 14px);
+                display: block;
+            }
+
+            .score-item:nth-child(4) .score-label::after {
+                content: "그렇지 않다";
+                font-size: clamp(9px, 2vw, 12px);
+                display: block;
+                white-space: nowrap;
+            }
+
+            .type-features {
+                grid-template-columns: 1fr;
+            }
+
+            .user-form-grid {
+                gap: 1rem;
+            }
+
+            .user-input,
+            .user-select {
+                padding: 0.875rem;
+                font-size: clamp(15px, 3vw, 17px);
+            }
+
+            .user-radio-group {
+                gap: 0.75rem;
+            }
+
+            .radio-label {
+                font-size: clamp(14px, 2.8vw, 16px);
+            }
+
+            .consent-box {
+                margin-top: 1rem;
+                padding: 1rem;
+            }
+
+            .consent-label {
+                font-size: clamp(13px, 2.5vw, 15px);
+            }
+
+            .info-block {
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .info-item {
+                display: grid;
+                grid-template-columns: auto 1fr;
+                column-gap: .5rem;
+                row-gap: .35rem;
+                font-size: clamp(14px, 4vw, 17px);
+                line-height: 1.55;
+            }
+
+            .info-item strong {
+                margin-top: .1rem;
+                min-width: 1.4em;
+            }
+
+            .info-email {
+                justify-content: center;
+                font-size: clamp(13px, 4vw, 16px);
+            }
+
+            .strategy-item {
+                margin-bottom: 1rem;
+            }
+
+            .strategy-item input {
+                padding: 0.875rem;
+                font-size: clamp(14px, 3vw, 16px);
+            }
+
+            .strategy-add-btn {
+                padding: 0.875rem 1.5rem;
+                font-size: clamp(14px, 3vw, 16px);
+            }
+        }
+
+        /* 모바일 (480px 이하) */
+        @media (max-width: 480px) {
+            body {
+                padding: 0.75rem 0.25rem;
+            }
+
+            .card {
+                padding: 1.25rem;
+                border-radius: 1.25rem;
+            }
+
+            .actions {
+                margin-left: -1.25rem;
+                margin-right: -1.25rem;
+                margin-bottom: -1.25rem;
+                border-radius: 0 0 1.25rem 1.25rem;
+            }
+
+            .answer-options {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.25rem;
+            }
+
+            .answer-option {
+                padding: 0.625rem 0.25rem;
+            }
+
+            .answer-option .option-score {
+                font-size: clamp(12px, 3vw, 16px);
+            }
+
+            .answer-option .option-label {
+                font-size: clamp(8px, 1.8vw, 11px);
+            }
+
+            .question-card {
+                padding: 1rem;
+            }
+
+            .question-number {
+                width: 1.75rem;
+                height: 1.75rem;
+                font-size: 13px;
+            }
+
+            .graph {
+                height: 200px;
+                gap: 0.375rem;
+            }
+
+            .graph-bar {
+                max-width: 40px;
+                min-height: 15px;
+            }
+
+            .graph-bar-label {
+                font-size: 11px;
+            }
+
+            .graph-bar-value {
+                font-size: 11px;
+            }
+
+            .score-summary {
+                display: flex;
+                gap: 0.25rem;
+                overflow-x: visible;
+            }
+
+            .score-card {
+                flex: 1 1 0;
+                min-width: 0;
+                padding: 0.625rem 0.375rem;
+            }
+
+            .score-card .axis-name {
+                font-size: clamp(9px, 2vw, 12px);
+                line-height: 1.2;
+                margin-bottom: 0.25rem;
+            }
+
+            .score-card .axis-score {
+                font-size: clamp(14px, 3vw, 20px);
+            }
+
+            .type-badge {
+                padding: 0.5rem 1.25rem;
+                font-size: clamp(14px, 4vw, 18px);
+                margin: 0.25rem;
+            }
+
+            .type-button {
+                padding: 0.625rem 1.25rem;
+                font-size: clamp(13px, 3vw, 16px);
+                min-width: 80px;
+                margin: 0.25rem;
+            }
+
+            .btn {
+                padding: 0.75rem 1.25rem;
+                font-size: clamp(14px, 3.5vw, 16px);
+            }
+
+            .type-detail-card {
+                padding: 1.25rem;
+            }
+
+            .type-detail-card li {
+                padding-left: 1.5rem;
+            }
+
+            .type-selector-container {
+                padding: 1.25rem;
+            }
+
+            .graph-container {
+                padding: 1.25rem;
+            }
+
+            .scoring-guide {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 매우 작은 화면 (360px 이하) */
+        @media (max-width: 360px) {
+            body {
+                padding: 0.5rem 0.25rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .actions {
+                margin-left: -1rem;
+                margin-right: -1rem;
+                margin-bottom: -1rem;
+                padding: 0.875rem;
+                border-radius: 0 0 1rem 1rem;
+            }
+
+            .actions .btn {
+                min-width: 100px;
+                padding: 0.75rem 1rem;
+                font-size: clamp(13px, 3vw, 15px);
+            }
+
+            .graph {
+                height: 180px;
+            }
+
+            .graph-bar {
+                max-width: 35px;
+            }
+
+            .type-badge {
+                padding: 0.5rem 1rem;
+                font-size: 14px;
+            }
+
+            .btn {
+                padding: 0.75rem 1rem;
+            }
+        }
+
+        /* 가로 모드 (landscape) 작은 화면 */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body {
+                padding: 0.5rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .graph {
+                height: 180px;
+            }
+
+            .header {
+                margin-bottom: 1rem;
+            }
+
+            .result-header {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 인트로 섹션 -->
+        <div id="introSection" class="card">
+            <div class="header">
+                <h1>나의 소통유형</h1>
+                <p class="subtitle">소통유형 체크리스트</p>
+            </div>
+
+            <div class="intro-section">
+                <h2>검사 안내</h2>
+                <p>
+                    아래 25개의 문항을 읽고, 자신에게 해당하는 정도를 선택해주세요.<br>
+                    각 문항은 0점부터 3점까지 점수가 부여되며, 솔직하고 정확하게 답변하시면<br>더 정확한 결과를 확인하실 수 있습니다.<br>
+                    검사 완료 후 가장 높은 점수를 받은 유형이 당신의 소통유형으로 나타납니다.
+                </p>
+
+                <div class="scoring-guide">
+                    <div class="score-item">
+                        <div class="score-value">3점</div>
+                        <div class="score-label">항상 그렇다</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-value">2점</div>
+                        <div class="score-label">비교적 그렇다</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-value">1점</div>
+                        <div class="score-label">어쩌다 간혹 그렇다</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-value">0점</div>
+                        <div class="score-label">전혀 그렇지 않다</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn" onclick="startUserInfo()">검사 시작하기</button>
+            </div>
+        </div>
+
+        <!-- 사용자 정보 입력 섹션 -->
+        <div id="userInfoSection" class="card" style="display: none;">
+            <div class="header">
+                <div class="section-header">
+                    <div class="tag">📝 시작 준비</div>
+                    <div class="title-main">사용자 정보 입력</div>
+                    <div class="subtitle-text">
+                        <span class="subtitle-line">검사를 시작하기 전에</span>
+                        <span class="subtitle-line secondary">이름, 성별, 나이를 입력해주세요.</span>
+                    </div>
+                    <div class="divider"></div>
+                </div>
+            </div>
+
+            <div class="user-form-grid">
+                <div class="user-field">
+                    <label style="font-weight:700; color:#334155; font-size: clamp(14px,2vw,16px); margin-bottom: 0.5rem; display: block;">이름</label>
+                    <input id="u-name" type="text" placeholder="이름을 입력하세요" class="user-input" />
+                </div>
+                <div class="user-field">
+                    <label style="font-weight:700; color:#334155; font-size: clamp(14px,2vw,16px); margin-bottom: 0.5rem; display: block;">성별</label>
+                    <div class="user-radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="u-gender" value="남성" class="radio-input" />
+                            <span>남성</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="u-gender" value="여성" class="radio-input" />
+                            <span>여성</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="user-field">
+                    <label style="font-weight:700; color:#334155; font-size: clamp(14px,2vw,16px); margin-bottom: 0.5rem; display: block;">나이</label>
+                    <select id="u-age" class="user-select">
+                        <option value="">나이를 선택하세요</option>
+                        <option value="10대">10대</option>
+                        <option value="20대">20대</option>
+                        <option value="30대">30대</option>
+                        <option value="40대">40대</option>
+                        <option value="50대">50대</option>
+                        <option value="60대">60대</option>
+                        <option value="70대 이상">70대 이상</option>
+                    </select>
+                </div>
+                <div class="user-field" style="margin-top: 1rem;">
+                    <label class="consent-label" style="display:flex; gap:.6rem; align-items:center; cursor:pointer; font-size:clamp(13px,2.1vw,15px); color:#475569; border:2px solid #e5e7eb; border-radius:.75rem; padding: 1rem; background:#fff;">
+                        <input id="u-consent" type="checkbox" class="consent-checkbox" />
+                        연구·통계 및 서비스 개선 목적의 익명 처리된 데이터 활용에 동의합니다.
+                    </label>
+                </div>
+            </div>
+
+            <div class="actions" style="margin-top: 2.5rem;">
+                <button class="btn btn-secondary" onclick="backToIntro()">← 이전</button>
+                <button class="btn" onclick="startTestFromInfo()">검사 시작</button>
+            </div>
+        </div>
+
+        <!-- 검사 섹션 -->
+        <div id="testSection" class="card" style="display: none;">
+            <div class="progress-bar">
+                <div class="progress-info">
+                    <span class="progress-text">진행률</span>
+                    <span class="progress-percentage" id="progressPercentage">0%</span>
+                </div>
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+
+            <div class="question-list" id="questionList"></div>
+
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="backToUserInfo()">← 이전</button>
+                <button class="btn" onclick="showResults()" id="resultBtn" disabled>결과 보기</button>
+            </div>
+        </div>
+
+        <!-- 결과 페이지 1: 점수 및 그래프 -->
+        <div id="resultSection1" class="result-section">
+            <div class="card">
+                <div class="result-header">
+                    <h2 class="result-title">나의 소통유형 결과</h2>
+                    <div id="typeBadges"></div>
+                </div>
+
+                <div class="score-summary" id="scoreSummary"></div>
+
+                <div class="graph-container">
+                    <h3 class="graph-title">소통유형 그래프</h3>
+                    <div class="graph" id="graph"></div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-secondary" onclick="backToTest()">← 이전</button>
+                    <button class="btn" onclick="showResultPage2()">다음 →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 결과 페이지 2: 유형 상세 설명 -->
+        <div id="resultSection2" class="result-section">
+            <div class="card">
+                <div class="result-header">
+                    <h2 class="result-title" id="typeDetailTitle"></h2>
+                </div>
+
+                <div id="typeDetailContent"></div>
+
+                <div class="actions">
+                    <button class="btn btn-secondary" onclick="showResultPage1()">← 이전</button>
+                    <button class="btn" onclick="showResultPage3()">다음 →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 결과 페이지 3: 실천 전략 -->
+        <div id="resultSection3" class="result-section">
+            <div class="card">
+                <div class="result-header">
+                    <h2 class="result-title">나의 소통 역량 향상 실천 전략</h2>
+                </div>
+
+                <div class="strategy-container">
+                    <p style="text-align: center; color: #64748b; margin-bottom: 2rem; font-size: clamp(14px, 2.5vw, 16px);">
+                        나의 소통유형을 바탕으로 실천할 수 있는 구체적인 전략을 작성해보세요.
+                    </p>
+                    <div id="strategyList"></div>
+                    <div style="text-align: center; margin-top: 1.5rem;">
+                        <button class="btn btn-secondary" onclick="addStrategy()" style="padding: 0.75rem 1.5rem; font-size: 14px;">+ 전략 추가하기</button>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-secondary" onclick="showResultPage2()">← 이전</button>
+                    <button class="btn" onclick="showResultPage4()">다음 →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 결과 페이지 4: 인사 페이지 -->
+        <div id="resultSection4" class="result-section">
+            <div class="card">
+                <div class="result-header">
+                    <div style="font-size: clamp(48px, 10vw, 72px); margin-bottom: 1rem;">🎉</div>
+                    <h2 class="result-title">수고하셨습니다!</h2>
+                </div>
+
+                <div style="text-align: center; padding: 2rem 0; word-break: keep-all;">
+                    <p style="font-size: clamp(16px, 3vw, 20px); color: #475569; line-height: 1.8; margin-bottom: 2rem;">
+                        소통유형 체크리스트 실습을 완료해주셔서 감사합니다 😊<br>
+                        검사 결과를 참고해서 더 나은 소통을 해나가시길 응원합니다.
+                    </p>
+                    <div class="info-block">
+                        <div class="info-title">검사 관련 추가 정보</div>
+                        <div class="info-item">
+                            <strong>1.</strong>
+                            <div>유튜브 <strong>'이재경교수TV'</strong>, 길벗심리상담연구소 홈페이지에서 더 많은 자료를 확인해 보세요.</div>
+                        </div>
+                        <div class="info-item">
+                            <strong>2.</strong>
+                            <div>
+                                교육(강의) 및 심리 상담 문의는 아래 메일로 연락 주세요.<br>
+                                <span class="info-email">ljg4129@naver.com</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn btn-secondary" onclick="showResultPage3()">← 이전</button>
+                    <button class="btn" onclick="resetTest()">처음으로</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 문항 데이터
+        // 1축: 1번, 6번, 18번, 21번, 25번
+        // 2축: 2번, 9번, 17번, 20번, 23번
+        // 3축: 3번, 10번, 13번, 16번, 22번
+        // 4축: 4번, 7번, 11번, 14번, 19번
+        // 5축: 5번, 9번, 12번, 15번, 24번
+        const questions = [
+            { text: "내 주관대로 말 할 수 있다.", axes: [1] }, // 1번 - 1축
+            { text: "대화 시, 상대방의 입장을 많이 고려하고 있다.", axes: [2] }, // 2번 - 2축
+            { text: "보고 자료를 꼼꼼하게 잘 만들 수 있다.", axes: [3] }, // 3번 - 3축
+            { text: "변화 있게 보고를 하려고 노력한다.", axes: [4] }, // 4번 - 4축
+            { text: "상대방의 어떠한 상황이나 요구에 비교적 순응하는 편이다.", axes: [5] }, // 5번 - 5축
+            { text: "내 이야기를 잘 듣지 않는다면 화가 날 것 같다.", axes: [1] }, // 6번 - 1축
+            { text: "보고할 때 감정을 잘 넣어 이야기하는 편이다.", axes: [4] }, // 7번 - 4축
+            { text: "조금 소극적인 스타일이라는 소리를 듣는다.", axes: [] }, // 8번 - 해당 없음
+            { text: "강한 것 보다는 부드러운 것을 더 좋아한다.", axes: [2, 5] }, // 9번 - 2축, 5축
+            { text: "논리적으로 정해진 형식과 룰을 중요시 한다.", axes: [3] }, // 10번 - 3축
+            { text: "정적인 것보다 동적이고 활기찬 것을 좋아한다.", axes: [4] }, // 11번 - 4축
+            { text: "상대의 의견에 민감한 편이다.", axes: [5] }, // 12번 - 5축
+            { text: "준비나 계획없이 바로 이야기 하지는 않는다.", axes: [3] }, // 13번 - 3축
+            { text: "창의적인 표현을 하려고 노력한다.", axes: [4] }, // 14번 - 4축
+            { text: "상대방과의 의견 대립은 거의 하지 않는다.", axes: [5] }, // 15번 - 5축
+            { text: "감성보다는 논리적이고 이성적이다.", axes: [3] }, // 16번 - 3축
+            { text: "상대방의 이야기에 공감을 하는 편이다.", axes: [2] }, // 17번 - 2축
+            { text: "옳다고 생각하는 나의 의견은 신념을 가지고 주장한다.", axes: [1] }, // 18번 - 1축
+            { text: "새로운 것에 대한 호기심과 흥미를 나타낸다.", axes: [4] }, // 19번 - 4축
+            { text: "상대방의 의견과 질문을 중시한다.", axes: [2] }, // 20번 - 2축
+            { text: "말보다는 행동으로 옮기는 경우가 더 많다.", axes: [1] }, // 21번 - 1축
+            { text: "수치나 도표 등의 보고에 강하다.", axes: [3] }, // 22번 - 3축
+            { text: "보고할 때의 억양과 톤의 변화가 심하지 않다.", axes: [2] }, // 23번 - 2축
+            { text: "유머 감각과는 거리가 멀다.", axes: [5] }, // 24번 - 5축
+            { text: "보고에 대한 목표의식이 분명하다.", axes: [1] } // 25번 - 1축
+        ];
+
+        // 축 정보
+        const axisInfo = {
+            1: { name: "주도형", color: "#047857", description: "리드하는 타입, 직설적 표현, 빠른 속도 선호" },
+            2: { name: "신중형", color: "#059669", description: "꼼꼼함, 분석적, 데이터 강조, 논리성" },
+            3: { name: "개방형", color: "#10b981", description: "호기심, 창의성, 감성적, 변화 추구" },
+            4: { name: "온정형", color: "#34d399", description: "부드러움, 배려심 많음, 매끄러운 표현" },
+            5: { name: "현실형", color: "#6ee7b7", description: "기존 방식, 원칙주의, 보수적, 소극적" }
+        };
+
+        // 유형별 상세 설명 (두번째 사진 기준)
+        const typeDetails = {
+            1: {
+                name: "주도형",
+                style: "강경한 스타일",
+                leftFeatures: [
+                    "리드하는 타입",
+                    "작은 내용 연연하지 않음",
+                    "직설표현",
+                    "짧은 문장 선호",
+                    "급한 성격",
+                    "빠른 속도 좋음",
+                    "주장 안 굽힘"
+                ],
+                rightFeatures: {
+                    characteristics: [
+                        "자기 주장이 강함",
+                        "급한 상황",
+                        "비판적, 통제적임"
+                    ],
+                    methods: [
+                        "자기 주도적인 행동 배제",
+                        "곧바로 반박론을 펼치지 말 것",
+                        "핵심적인 사항 위주 이야기",
+                        "결론부터 이야기"
+                    ],
+                    note: "현실형과 잘 맞음"
+                }
+            },
+            2: {
+                name: "신중형",
+                style: "꼼꼼한 스타일",
+                leftFeatures: [
+                    "꼼꼼함, 분석적",
+                    "데이터 강조",
+                    "논리성",
+                    "민감한 반응",
+                    "합리적 설명 선호",
+                    "빠른 의사 결정 부족",
+                    "큰 시야 부족"
+                ],
+                rightFeatures: {
+                    characteristics: [
+                        "논리적, 분석적",
+                        "사실 위주의 객관성 보유",
+                        "치밀하고 꼼꼼함"
+                    ],
+                    methods: [
+                        "논리적인 근거 확실히",
+                        "비교우위, 혜택 강조",
+                        "사소한 부분에도 신경 쓸 것"
+                    ],
+                    note: "신중형과 잘 맞음"
+                }
+            },
+            3: {
+                name: "개방형",
+                style: "우호적인 스타일",
+                leftFeatures: [
+                    "호기심, 창의성",
+                    "감성적",
+                    "변화 추구",
+                    "재치 유머",
+                    "쇼맨십 장점",
+                    "깊이 부족",
+                    "경솔"
+                ],
+                rightFeatures: {
+                    characteristics: [
+                        "낙천적, 창의적임",
+                        "변화를 추구",
+                        "유머 감각이 있음"
+                    ],
+                    methods: [
+                        "활기차고 생기 있게",
+                        "흥미 유도, 비주얼 강조",
+                        "내용상의 변화 추구"
+                    ],
+                    note: "개방형과 잘 맞음"
+                }
+            },
+            4: {
+                name: "온정형",
+                style: "부드러운 스타일",
+                leftFeatures: [
+                    "부드러움",
+                    "배려심 많음",
+                    "매끄러운 표현",
+                    "간단명료 부족",
+                    "지나친 배려 간섭"
+                ],
+                rightFeatures: {
+                    characteristics: [
+                        "차분함",
+                        "배려적임",
+                        "간섭이 있음"
+                    ],
+                    methods: [
+                        "간접적인 표현",
+                        "분위기를 고려한 주변 이야기",
+                        "편안하고 자연스럽게"
+                    ],
+                    note: "온정형과 잘 맞음"
+                }
+            },
+            5: {
+                name: "현실형",
+                style: "사무적인 스타일",
+                leftFeatures: [
+                    "기존 방식",
+                    "원칙주의",
+                    "요구사항 수용 장점",
+                    "보수적",
+                    "우유부단",
+                    "소극적"
+                ],
+                rightFeatures: {
+                    characteristics: [
+                        "정형화된 틀을 선호",
+                        "경험과 형식 중시",
+                        "소극적, 내성적"
+                    ],
+                    methods: [
+                        "보수적인 접근",
+                        "다양한 대안 마련 선택 유도",
+                        "이전의 통용 방식 선택"
+                    ],
+                    note: "온정형과 잘 맞음"
+                }
+            }
+        };
+
+        // 상태 관리
+        let answers = {};
+        let userInfo = {
+            name: '',
+            gender: '',
+            age: '',
+            consent: false
+        };
+        const answerOptions = [
+            { score: 3, label: "항상 그렇다" },
+            { score: 2, label: "비교적 그렇다" },
+            { score: 1, label: "어쩌다 간혹 그렇다" },
+            { score: 0, label: "전혀 그렇지 않다" }
+        ];
+
+        // 사용자 정보 입력 페이지로 이동
+        function startUserInfo() {
+            document.getElementById('introSection').style.display = 'none';
+            document.getElementById('userInfoSection').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 인트로 페이지로 돌아가기
+        function backToIntro() {
+            document.getElementById('userInfoSection').style.display = 'none';
+            document.getElementById('introSection').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 사용자 정보 입력 페이지로 돌아가기
+        function backToUserInfo() {
+            // 모든 섹션 숨기기
+            document.getElementById('introSection').style.display = 'none';
+            document.getElementById('testSection').style.display = 'none';
+            document.getElementById('resultSection1').classList.remove('active');
+            document.getElementById('resultSection2').classList.remove('active');
+            document.getElementById('resultSection3').classList.remove('active');
+            document.getElementById('resultSection4').classList.remove('active');
+            
+            // 사용자 정보 입력 페이지 표시
+            document.getElementById('userInfoSection').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 사용자 정보 확인 후 검사 시작
+        function startTestFromInfo() {
+            const nameEl = document.getElementById('u-name');
+            const ageEl = document.getElementById('u-age');
+            const consentEl = document.getElementById('u-consent');
+            const genderEl = document.querySelector('input[name="u-gender"]:checked');
+
+            userInfo.name = nameEl ? nameEl.value.trim() : '';
+            userInfo.age = ageEl ? ageEl.value : '';
+            userInfo.consent = consentEl ? consentEl.checked : false;
+            userInfo.gender = genderEl ? genderEl.value : '';
+
+            if (!userInfo.name) {
+                alert('이름을 입력해주세요.');
+                return;
+            }
+            if (!userInfo.gender) {
+                alert('성별을 선택해주세요.');
+                return;
+            }
+            if (!userInfo.age) {
+                alert('나이를 선택해주세요.');
+                return;
+            }
+            if (!userInfo.consent) {
+                alert('데이터 활용에 동의해주세요.');
+                return;
+            }
+
+            // 검사 시작
+            document.getElementById('userInfoSection').style.display = 'none';
+            document.getElementById('testSection').style.display = 'block';
+            renderQuestions();
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 문항 렌더링
+        function renderQuestions() {
+            const container = document.getElementById('questionList');
+            container.innerHTML = questions.map((q, index) => {
+                const questionNum = index + 1;
+                const selected = answers[index];
+
+                return `
+                    <div class="question-item ${selected !== undefined ? 'answered' : ''}" id="q-${index}">
+                        <div class="question-header">
+                            <div class="question-number">${questionNum}</div>
+                            <div class="question-text">${q.text}</div>
+                        </div>
+                        <div class="answer-options">
+                            ${answerOptions.map(option => `
+                                <div class="answer-option ${selected === option.score ? 'selected' : ''}" 
+                                     onclick="selectAnswer(${index}, ${option.score})">
+                                    <div class="option-score">${option.score}점</div>
+                                    <div class="option-label">${option.label}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 답변 선택
+        function selectAnswer(questionIndex, score) {
+            answers[questionIndex] = score;
+            renderQuestions();
+            updateProgress();
+        }
+
+        // 진행률 업데이트
+        function updateProgress() {
+            const answeredCount = Object.keys(answers).length;
+            const total = questions.length;
+            const percentage = Math.round((answeredCount / total) * 100);
+            
+            document.getElementById('progressPercentage').textContent = `${percentage}%`;
+            document.getElementById('progressBar').style.setProperty('--progress', `${percentage}%`);
+            
+            const resultBtn = document.getElementById('resultBtn');
+            // 최소 1개 이상 답변하면 결과를 볼 수 있도록 변경
+            resultBtn.disabled = answeredCount === 0;
+        }
+
+        // 점수 계산
+        function calculateScores() {
+            const scores = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+            
+            questions.forEach((q, index) => {
+                const answer = answers[index];
+                if (answer !== undefined) {
+                    q.axes.forEach(axis => {
+                        scores[axis] += answer;
+                    });
+                }
+            });
+            
+            return scores;
+        }
+
+        // 최고 점수 유형 찾기
+        function findHighestTypes(scores) {
+            const maxScore = Math.max(...Object.values(scores));
+            return Object.keys(scores)
+                .filter(axis => scores[axis] === maxScore)
+                .map(axis => parseInt(axis));
+        }
+
+        // 전역 변수
+        let currentHighestTypes = [];
+        let currentScores = {};
+        let selectedTypeForDetail = null;
+
+        // 결과 표시 (페이지 1)
+        function showResults() {
+            currentScores = calculateScores();
+            currentHighestTypes = findHighestTypes(currentScores);
+            selectedTypeForDetail = null; // 유형 선택 초기화
+            
+            // 모든 섹션 숨기기
+            document.getElementById('introSection').style.display = 'none';
+            document.getElementById('userInfoSection').style.display = 'none';
+            document.getElementById('testSection').style.display = 'none';
+            document.getElementById('resultSection1').classList.remove('active');
+            document.getElementById('resultSection2').classList.remove('active');
+            document.getElementById('resultSection3').classList.remove('active');
+            document.getElementById('resultSection4').classList.remove('active');
+            
+            // 결과 섹션 표시
+            document.getElementById('resultSection1').classList.add('active');
+            
+            // 유형 뱃지 (동점이면 비슷한 색상 사용)
+            const typeBadgesContainer = document.getElementById('typeBadges');
+            const badgeClass = currentHighestTypes.length > 1 ? 'equal-score' : `type-${currentHighestTypes[0]}`;
+            typeBadgesContainer.innerHTML = currentHighestTypes.map(type => 
+                `<span class="type-badge ${badgeClass}">${axisInfo[type].name}</span>`
+            ).join('');
+            
+            // 점수 요약
+            const scoreSummaryContainer = document.getElementById('scoreSummary');
+            scoreSummaryContainer.innerHTML = Object.entries(currentScores).map(([axis, score]) => {
+                const isHighest = currentHighestTypes.includes(parseInt(axis));
+                return `
+                    <div class="score-card ${isHighest ? 'highest' : ''}">
+                        <div class="axis-name">${axis}축: ${axisInfo[axis].name}</div>
+                        <div class="axis-score">${score}점</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // 그래프
+            renderGraph(currentScores);
+            
+            // 스크롤 맨 위로
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 검사 페이지로 돌아가기
+        function backToTest() {
+            // 모든 결과 섹션 숨기기
+            document.getElementById('introSection').style.display = 'none';
+            document.getElementById('userInfoSection').style.display = 'none';
+            document.getElementById('resultSection1').classList.remove('active');
+            document.getElementById('resultSection2').classList.remove('active');
+            document.getElementById('resultSection3').classList.remove('active');
+            document.getElementById('resultSection4').classList.remove('active');
+            
+            // 검사 섹션 표시
+            document.getElementById('testSection').style.display = 'block';
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 결과 페이지 2 표시
+        function showResultPage2() {
+            // 모든 섹션 숨기기
+            document.getElementById('introSection').style.display = 'none';
+            document.getElementById('userInfoSection').style.display = 'none';
+            document.getElementById('testSection').style.display = 'none';
+            document.getElementById('resultSection1').classList.remove('active');
+            document.getElementById('resultSection2').classList.remove('active');
+            document.getElementById('resultSection3').classList.remove('active');
+            document.getElementById('resultSection4').classList.remove('active');
+            
+            // 동점 유형이 여러 개일 경우 처음에는 첫 번째 유형 선택
+            if (selectedTypeForDetail === null && currentHighestTypes.length > 0) {
+                selectedTypeForDetail = currentHighestTypes[0];
+            }
+            
+            // 결과 페이지 2 표시
+            document.getElementById('resultSection2').classList.add('active');
+            renderTypeDetailPage();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 결과 페이지 1로 돌아가기
+        function showResultPage1() {
+            // 모든 섹션 숨기기
+            document.getElementById('introSection').style.display = 'none';
+            document.getElementById('userInfoSection').style.display = 'none';
+            document.getElementById('testSection').style.display = 'none';
+            document.getElementById('resultSection1').classList.remove('active');
+            document.getElementById('resultSection2').classList.remove('active');
+            document.getElementById('resultSection3').classList.remove('active');
+            document.getElementById('resultSection4').classList.remove('active');
+            
+            // 결과 페이지 1 표시
+            document.getElementById('resultSection1').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 결과 페이지 3 표시
+        function showResultPage3() {
+            // 모든 섹션 숨기기
+            document.getElementById('introSection').style.display = 'none';
+            document.getElementById('userInfoSection').style.display = 'none';
+            document.getElementById('testSection').style.display = 'none';
+            document.getElementById('resultSection1').classList.remove('active');
+            document.getElementById('resultSection2').classList.remove('active');
+            document.getElementById('resultSection3').classList.remove('active');
+            document.getElementById('resultSection4').classList.remove('active');
+            
+            // 결과 페이지 3 표시
+            document.getElementById('resultSection3').classList.add('active');
+            renderStrategyPage();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 결과 페이지 2로 돌아가기
+        function showResultPage2Back() {
+            // 모든 섹션 숨기기
+            document.getElementById('introSection').style.display = 'none';
+            document.getElementById('userInfoSection').style.display = 'none';
+            document.getElementById('testSection').style.display = 'none';
+            document.getElementById('resultSection1').classList.remove('active');
+            document.getElementById('resultSection2').classList.remove('active');
+            document.getElementById('resultSection3').classList.remove('active');
+            document.getElementById('resultSection4').classList.remove('active');
+            
+            // 결과 페이지 2 표시
+            document.getElementById('resultSection2').classList.add('active');
+            renderTypeDetailPage();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 결과 페이지 4 표시
+        function showResultPage4() {
+            // 모든 섹션 숨기기
+            document.getElementById('introSection').style.display = 'none';
+            document.getElementById('userInfoSection').style.display = 'none';
+            document.getElementById('testSection').style.display = 'none';
+            document.getElementById('resultSection1').classList.remove('active');
+            document.getElementById('resultSection2').classList.remove('active');
+            document.getElementById('resultSection3').classList.remove('active');
+            document.getElementById('resultSection4').classList.remove('active');
+            
+            // 결과 페이지 4 표시
+            document.getElementById('resultSection4').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 결과 페이지 3으로 돌아가기
+        function showResultPage3Back() {
+            // 모든 섹션 숨기기
+            document.getElementById('introSection').style.display = 'none';
+            document.getElementById('userInfoSection').style.display = 'none';
+            document.getElementById('testSection').style.display = 'none';
+            document.getElementById('resultSection1').classList.remove('active');
+            document.getElementById('resultSection2').classList.remove('active');
+            document.getElementById('resultSection3').classList.remove('active');
+            document.getElementById('resultSection4').classList.remove('active');
+            
+            // 결과 페이지 3 표시
+            document.getElementById('resultSection3').classList.add('active');
+            renderStrategyPage();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 그래프 렌더링
+        function renderGraph(scores) {
+            const graphContainer = document.getElementById('graph');
+            const maxScore = Math.max(...Object.values(scores));
+            
+            graphContainer.innerHTML = Object.entries(scores).map(([axis, score]) => {
+                const axisNum = parseInt(axis);
+                const isHighest = currentHighestTypes.includes(axisNum);
+                const percentage = maxScore > 0 ? (score / maxScore) * 100 : 0;
+                return `
+                    <div class="graph-bar-container">
+                        <div class="graph-bar-wrapper">
+                            <div class="graph-bar type-${axis} ${isHighest ? 'highest' : ''}" style="height: ${percentage}%"></div>
+                        </div>
+                        <div class="graph-bar-label">${axis}축</div>
+                        <div class="graph-bar-label">${axisInfo[axis].name}</div>
+                        <div class="graph-bar-value">${score}점</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 유형 상세 설명 페이지 렌더링
+        function renderTypeDetailPage() {
+            const titleContainer = document.getElementById('typeDetailTitle');
+            const contentContainer = document.getElementById('typeDetailContent');
+            
+            if (currentHighestTypes.length === 0) {
+                titleContainer.textContent = '유형 정보';
+                contentContainer.innerHTML = '<p>유형 정보를 찾을 수 없습니다.</p>';
+                return;
+            }
+
+            // 동점 유형이 여러 개일 경우 처음에는 첫 번째 유형 표시
+            if (selectedTypeForDetail === null) {
+                selectedTypeForDetail = currentHighestTypes[0];
+            }
+
+            const detail = typeDetails[selectedTypeForDetail];
+            
+            // 동점 유형이 여러 개인 경우 버튼 표시
+            let typeButtonsHTML = '';
+            if (currentHighestTypes.length > 1) {
+                typeButtonsHTML = `
+                    <div class="type-selector-container">
+                        <p class="type-selector-label">🔍 다른 유형 확인하기</p>
+                        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem;">
+                            ${currentHighestTypes.map(type => {
+                                const isActive = selectedTypeForDetail === type;
+                                return `<button class="type-button ${isActive ? 'active' : ''}" onclick="selectTypeForDetail(${type})">${axisInfo[type].name}</button>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            titleContainer.innerHTML = `
+                <div class="type-detail-title">${detail.name}</div>
+                <span class="type-detail-subtitle">(${detail.style})</span>
+            `;
+            
+            contentContainer.innerHTML = `
+                ${typeButtonsHTML}
+                <div class="type-detail-grid">
+                    <div class="type-detail-card">
+                        <h3>나의 소통유형</h3>
+                        <ul>
+                            ${detail.leftFeatures.map(feature => `<li>${feature}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="type-detail-card">
+                        <h3>유형별 소통방법</h3>
+                        <div style="margin-bottom: 1.5rem;">
+                            <strong style="color: #059669; font-size: 15px;">특징</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                ${detail.rightFeatures.characteristics.map(char => `<li>${char}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <strong style="color: #059669; font-size: 15px;">소통방법</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                ${detail.rightFeatures.methods.map(method => `<li>${method}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 0.75rem; margin-top: 1rem;">
+                            <p style="margin: 0; font-size: 14px; color: #475569;"><strong>비고:</strong> ${detail.rightFeatures.note}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 유형 선택 (동점일 때)
+        function selectTypeForDetail(type) {
+            selectedTypeForDetail = type;
+            renderTypeDetailPage();
+        }
+
+        // 실천 전략 페이지 렌더링
+        let strategyCount = 3;
+        let strategies = Array(3).fill('');
+
+        function renderStrategyPage() {
+            const container = document.getElementById('strategyList');
+            container.innerHTML = strategies.map((strategy, index) => `
+                <div class="strategy-item">
+                    <div class="strategy-number">전략 ${index + 1}</div>
+                    <input type="text" 
+                           class="strategy-input" 
+                           placeholder="실천할 수 있는 구체적인 전략을 입력하세요"
+                           value="${strategy}"
+                           onchange="updateStrategy(${index}, this.value)">
+                    ${index >= 3 ? `<button class="strategy-remove" onclick="removeStrategy(${index})">삭제</button>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function updateStrategy(index, value) {
+            strategies[index] = value;
+        }
+
+        function addStrategy() {
+            strategyCount++;
+            strategies.push('');
+            renderStrategyPage();
+        }
+
+        function removeStrategy(index) {
+            if (strategyCount > 1) {
+                strategies.splice(index, 1);
+                strategyCount--;
+                renderStrategyPage();
+            }
+        }
+
+        // 검사 초기화
+        function resetTest() {
+            answers = {};
+            strategies = Array(3).fill('');
+            strategyCount = 3;
+            currentHighestTypes = [];
+            currentScores = {};
+            userInfo = { name: '', gender: '', age: '', consent: false };
+            
+            // 폼 초기화
+            const nameEl = document.getElementById('u-name');
+            const ageEl = document.getElementById('u-age');
+            const consentEl = document.getElementById('u-consent');
+            const genderEls = document.querySelectorAll('input[name="u-gender"]');
+            
+            if (nameEl) nameEl.value = '';
+            if (ageEl) ageEl.value = '';
+            if (consentEl) consentEl.checked = false;
+            genderEls.forEach(el => el.checked = false);
+            
+            document.getElementById('introSection').style.display = 'block';
+            document.getElementById('userInfoSection').style.display = 'none';
+            document.getElementById('testSection').style.display = 'none';
+            document.getElementById('resultSection1').classList.remove('active');
+            document.getElementById('resultSection2').classList.remove('active');
+            document.getElementById('resultSection3').classList.remove('active');
+            document.getElementById('resultSection4').classList.remove('active');
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
