@@ -1587,20 +1587,22 @@
             .type-selector-wrapper {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.75rem;
+                align-items: start;
             }
 
             .type-selector-container {
                 padding: 1.05rem;
                 margin-bottom: 0;
                 margin-top: 0;
-            }
-
-            .type-selector-label {
-                font-size: clamp(13px, 2.2vw, 15px);
-                margin-bottom: 0.75rem;
+                display: flex;
+                flex-direction: column;
+                height: 100%;
             }
 
             .type-button-wrapper {
+                flex-grow: 1;
+                display: flex;
+                align-items: stretch;
                 justify-content: center;
             }
 
@@ -1609,14 +1611,26 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.5rem;
                 width: 100%;
+                align-self: stretch;
             }
 
-            .type-button-container.buttons-1,
-            .type-button-container.buttons-2 {
+            .type-selector-label {
+                font-size: clamp(13px, 2.2vw, 15px);
+                margin-bottom: 0.75rem;
+            }
+
+            .type-button-container.buttons-1 {
                 grid-template-columns: 1fr;
             }
 
-            .type-button-container.buttons-3,
+            .type-button-container.buttons-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .type-button-container.buttons-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
             .type-button-container.buttons-4 {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -1633,7 +1647,16 @@
                 width: 100%;
             }
 
-            .type-button-container.buttons-3 .type-button,
+            .type-button-container.buttons-2 .type-button,
+            .type-button-container.buttons-3 .type-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
             .type-button-container.buttons-4 .type-button,
             .type-button-container.buttons-5 .type-button {
                 aspect-ratio: 1;
@@ -1982,13 +2005,20 @@
             .type-selector-wrapper {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.5rem;
+                align-items: start;
             }
 
             .type-selector-container {
                 padding: 1.25rem;
+                display: flex;
+                flex-direction: column;
+                height: 100%;
             }
 
             .type-button-wrapper {
+                flex-grow: 1;
+                display: flex;
+                align-items: stretch;
                 justify-content: center;
             }
 
@@ -1997,14 +2027,21 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.5rem;
                 width: 100%;
+                align-self: stretch;
             }
 
-            .type-button-container.buttons-1,
-            .type-button-container.buttons-2 {
+            .type-button-container.buttons-1 {
                 grid-template-columns: 1fr;
             }
 
-            .type-button-container.buttons-3,
+            .type-button-container.buttons-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .type-button-container.buttons-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
             .type-button-container.buttons-4 {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -2019,7 +2056,16 @@
                 width: 100%;
             }
 
-            .type-button-container.buttons-3 .type-button,
+            .type-button-container.buttons-2 .type-button,
+            .type-button-container.buttons-3 .type-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
             .type-button-container.buttons-4 .type-button,
             .type-button-container.buttons-5 .type-button {
                 aspect-ratio: 1;
