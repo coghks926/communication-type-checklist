@@ -1308,7 +1308,7 @@
 
             .type-detail-grid {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
+                gap: 1rem;
             }
         }
 
@@ -1530,9 +1530,11 @@
             }
 
             .type-detail-grid {
+                display: grid;
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.75rem;
                 margin-bottom: 1rem;
+                align-items: stretch;
             }
 
             .type-detail-card {
@@ -1551,12 +1553,6 @@
                 box-sizing: border-box;
                 flex-shrink: 0;
                 line-height: 1.4;
-            }
-
-            .type-detail-grid {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                align-items: stretch;
             }
 
             .type-detail-card:nth-child(2) h3 {
@@ -1609,15 +1605,32 @@
             }
 
             .type-button-container {
-                justify-content: center;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
                 width: 100%;
+            }
+
+            .type-button-container.buttons-1,
+            .type-button-container.buttons-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .type-button-container.buttons-3,
+            .type-button-container.buttons-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .type-button-container.buttons-5 {
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .type-button {
                 padding: 0.75rem 1.5rem;
                 font-size: clamp(14px, 2.8vw, 18px);
-                margin: 0.3rem;
-                min-width: 90px;
+                margin: 0;
+                min-width: 0;
+                width: 100%;
             }
 
             .intro-section p {
@@ -1966,7 +1979,29 @@
             }
 
             .type-button-container {
-                justify-content: center;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+                width: 100%;
+            }
+
+            .type-button-container.buttons-1,
+            .type-button-container.buttons-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .type-button-container.buttons-3,
+            .type-button-container.buttons-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .type-button-container.buttons-5 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .type-button {
+                margin: 0;
+                min-width: 0;
                 width: 100%;
             }
 
@@ -2810,7 +2845,7 @@
                 <div class="type-selector-container">
                     <p class="type-selector-label">🔍 나의 유형 확인하기</p>
                     <div class="type-button-wrapper">
-                        <div class="type-button-container">
+                        <div class="type-button-container buttons-${myTypes.length}">
                             ${myTypes.map(type => {
                                 const isActive = selectedTypeForDetail === type;
                                 return `<button class="type-button ${isActive ? 'active' : ''}" onclick="selectTypeForDetail(${type})">${axisInfo[type].name}</button>`;
@@ -2825,7 +2860,7 @@
                 <div class="type-selector-container">
                     <p class="type-selector-label">🔍 다른 유형 확인하기</p>
                     <div class="type-button-wrapper">
-                        <div class="type-button-container">
+                        <div class="type-button-container buttons-${otherTypes.length}">
                             ${otherTypes.map(type => {
                                 const isActive = selectedTypeForDetail === type;
                                 return `<button class="type-button ${isActive ? 'active' : ''}" onclick="selectTypeForDetail(${type})">${axisInfo[type].name}</button>`;
