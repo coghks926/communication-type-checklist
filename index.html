@@ -1619,23 +1619,24 @@
                 margin-bottom: 0.75rem;
             }
 
-            .type-button-container.buttons-1,
-            .type-button-container.buttons-2,
-            .type-button-container.buttons-3 {
-                grid-template-columns: 1fr;
-            }
-
             .type-button-container.buttons-1 {
-                min-height: calc(48px + 0.5rem);
+                grid-template-columns: 1fr;
+                display: flex;
+                justify-content: center;
             }
 
             .type-button-container.buttons-2 {
-                min-height: calc((48px + 0.5rem) * 2);
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 0.375rem !important;
             }
 
             .type-button-container.buttons-3 {
-                min-height: calc((48px + 0.5rem) * 3);
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 0.375rem !important;
             }
+
 
             .type-button-container.buttons-4 {
                 grid-template-columns: repeat(2, 1fr);
@@ -1664,7 +1665,16 @@
                 text-overflow: ellipsis;
                 padding: 0.75rem 1.5rem;
                 font-size: clamp(14px, 2.8vw, 18px);
-                min-height: 48px;
+                box-sizing: border-box;
+                height: clamp(45px, calc(0.75rem * 2 + 1.2em), 50px);
+                min-height: clamp(45px, calc(0.75rem * 2 + 1.2em), 50px);
+                margin: 0 !important;
+                flex-shrink: 0;
+            }
+
+            .type-button-container.buttons-2 .type-button:not(:last-child),
+            .type-button-container.buttons-3 .type-button:not(:last-child) {
+                margin-bottom: 0.375rem !important;
             }
 
             .type-button-container.buttons-4 .type-button,
@@ -2040,22 +2050,22 @@
                 align-self: stretch;
             }
 
-            .type-button-container.buttons-1,
-            .type-button-container.buttons-2,
-            .type-button-container.buttons-3 {
-                grid-template-columns: 1fr;
-            }
-
             .type-button-container.buttons-1 {
-                min-height: calc(48px + 0.5rem);
+                grid-template-columns: 1fr;
+                display: flex;
+                justify-content: center;
             }
 
             .type-button-container.buttons-2 {
-                min-height: calc((48px + 0.5rem) * 2);
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 0.375rem !important;
             }
 
             .type-button-container.buttons-3 {
-                min-height: calc((48px + 0.5rem) * 3);
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 0.375rem !important;
             }
 
             .type-button-container.buttons-4 {
@@ -2083,7 +2093,16 @@
                 text-overflow: ellipsis;
                 padding: 0.75rem 1.5rem;
                 font-size: clamp(14px, 2.8vw, 18px);
-                min-height: 48px;
+                box-sizing: border-box;
+                height: clamp(45px, calc(0.75rem * 2 + 1.2em), 50px);
+                min-height: clamp(45px, calc(0.75rem * 2 + 1.2em), 50px);
+                margin: 0 !important;
+                flex-shrink: 0;
+            }
+
+            .type-button-container.buttons-2 .type-button:not(:last-child),
+            .type-button-container.buttons-3 .type-button:not(:last-child) {
+                margin-bottom: 0.375rem !important;
             }
 
             .type-button-container.buttons-4 .type-button,
