@@ -2883,6 +2883,10 @@
             
             // 결과 페이지 4 표시
             document.getElementById('resultSection4').classList.add('active');
+            
+            // 구글 시트로 데이터 전송
+            sendToGoogleSheet();
+            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -3074,6 +3078,44 @@
         }
 
         // 검사 초기화
+        // 구글 시트로 데이터 전송
+        const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyhKe0C_Nxh4GlG7tB4CGEv2nRnCENAmmxzFyVwNc1icqDcNc82r73Vg3_XNVSCNGnLaQ/exec';
+        
+        function sendToGoogleSheet() {
+            // 검사자유형 문자열 생성
+            const resultTypeNames = currentHighestTypes.map(type => axisInfo[type].name).join(', ');
+            
+            // 실천전략 문자열 생성 (빈 값 제외하고 합치기)
+            const strategyText = strategies.filter(s => s.trim() !== '').join(' / ');
+            
+            const data = {
+                gender: userInfo.gender,
+                age: userInfo.age,
+                dominant: currentScores[1] || 0,    // 주도형
+                cautious: currentScores[2] || 0,    // 신중형
+                open: currentScores[3] || 0,        // 개방형
+                warm: currentScores[4] || 0,        // 온정형
+                realistic: currentScores[5] || 0,  // 현실형
+                resultType: resultTypeNames,
+                strategy: strategyText
+            };
+            
+            fetch(GOOGLE_SHEET_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                console.log('데이터가 구글 시트에 저장되었습니다.');
+            })
+            .catch(error => {
+                console.error('저장 오류:', error);
+            });
+        }
+
         function resetTest() {
             answers = {};
             strategies = Array(3).fill('');
